@@ -1,7 +1,6 @@
 # Biometryczne systemy rozpoznawania użytkownika i kontroli dostępu
 ---
-# Autor: Jowita Kruk,
-# Numer albumu: 339351
+# Jowita Kruk, 339351
 
 
 ## Treść Zadania
