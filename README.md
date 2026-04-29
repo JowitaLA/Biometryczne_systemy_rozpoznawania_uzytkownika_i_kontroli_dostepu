@@ -24,3 +24,11 @@ Na podstawie programu realizującego transformację PCA należy wykonać **trans
 
 ### Opis:
 Program realizuje transformację PCA dla zadanego zbioru danych, a następnie wykonuje jej transformację odwrotną po redukcji wymiarowości poprzez usunięcie składowej o najmniejszej wariancji. Na podstawie zredukowanych danych odtwarzana jest oryginalna macierz cech, a następnie analizowane są różnice pomiędzy wartościami pierwotnymi i zrekonstruowanymi.
+
+## Zadanie 3
+### Treść:
+Za pomocą kodu `zadanie_dryf.py` oraz załączonego do zadania pliku *„Dryf danych w zbiorze”* należy przeprowadzić **test t‑Studenta** w celu sprawdzenia występowania dryfu danych pomiędzy zbiorem referencyjnym a zbiorem aktualnym.
+
+### Opis:
+Program oblicza średnie oraz wariancje dla dwóch zbiorów danych, a następnie wyznacza wartość statystyki testowej t‑Studenta. Na podstawie otrzymanego wyniku oraz zadanego poziomu istotności podejmowana jest decyzja o występowaniu lub braku dryfu danych. Otrzymany rezultat zostaje zweryfikowany przy użyciu funkcji ttest_ind z biblioteki SciPy.
+Dodatkowo do programu zostało dodane menu wyboru, jakie dane mają zostać użyte oraz wersja testu t. W celu pokazania różnicy obu tych wersji, należy zmienić parametr alpha z `0.05` (5%) na `0.01` (1%) oraz wybrać opcję `2`: *Przykład z wykryciem dryfu* (brak dryfu dla wersji prostej, wykrycie dryfu dla wersji klasycznej).
