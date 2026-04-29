@@ -27,7 +27,7 @@ Program realizuje transformację PCA dla zadanego zbioru danych, a następnie wy
 
 ## Zadanie 3
 ### Treść:
-Za pomocą kodu `zadanie_dryf.py` oraz załączonego do zadania pliku *„Dryf danych w zbiorze”* należy przeprowadzić **test t‑Studenta** w celu sprawdzenia występowania dryfu danych pomiędzy zbiorem referencyjnym a zbiorem aktualnym.
+Za pomocą kodu `zadanie_dryf.py` oraz załączonego do zadania pliku *„Dryf danych w zbiorze”* należy przeprowadzić **klasyczny test t‑Studenta** w celu sprawdzenia występowania dryfu danych pomiędzy zbiorem referencyjnym a zbiorem aktualnym.
 
 ### Opis:
 Program oblicza średnie oraz wariancje dla dwóch zbiorów danych, a następnie wyznacza wartość statystyki testowej t‑Studenta. Na podstawie otrzymanego wyniku oraz zadanego poziomu istotności podejmowana jest decyzja o występowaniu lub braku dryfu danych. Otrzymany rezultat zostaje zweryfikowany przy użyciu funkcji ttest_ind z biblioteki SciPy.
