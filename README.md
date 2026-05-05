@@ -32,3 +32,10 @@ Za pomocą kodu `zadanie_dryf.py` oraz załączonego do zadania pliku *„Dryf d
 ### Opis:
 Program oblicza średnie oraz wariancje dla dwóch zbiorów danych, a następnie wyznacza wartość statystyki testowej t‑Studenta. Na podstawie otrzymanego wyniku oraz zadanego poziomu istotności podejmowana jest decyzja o występowaniu lub braku dryfu danych. Otrzymany rezultat zostaje zweryfikowany przy użyciu funkcji ttest_ind z biblioteki SciPy.
 Dodatkowo do programu zostało dodane menu wyboru, jakie dane mają zostać użyte oraz wersja testu t. W celu pokazania różnicy obu tych wersji, należy zmienić parametr alpha z `0.05` (5%) na `0.01` (1%) oraz wybrać opcję `2`: *Przykład z wykryciem dryfu* (brak dryfu dla wersji prostej, wykrycie dryfu dla wersji klasycznej).
+
+## Zadanie 4
+### Treść:
+Za pomocą kodu `regresja_liniowa.py` oraz załączonego do zadania pliku *„Wyjaśnienia”* należy przeprowadzić **ręczne wyliczenia regresji liniowej** oraz dostać jak najbardziej możliwie podobny wykres z zautomatyzowanego.
+
+### Opis:
+Program ręcznie oblicza regresję liniową. Program wydaje się bardziej obszerny oraz minimalnie zmienił się wyraz wolny (b) niż w programie obliczającym automatycznie OLS.
