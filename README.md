@@ -39,3 +39,7 @@ Za pomocą kodu `regresja_liniowa.py` oraz załączonego do zadania pliku *„Wy
 
 ### Opis:
 Program ręcznie oblicza regresję liniową. Program wydaje się bardziej obszerny oraz minimalnie zmienił się wyraz wolny (b) niż w programie obliczającym automatycznie OLS.
+
+## Zadanie 5
+### Treść zadania
+Celem zadania jest opracowanie systemu ekspertowego, który na podstawie odpowiedzi studenta ocenia jakość prowadzenia zajęć przez prowadzącego. System powinien wykorzystywać reguły typu IF warunek THEN decyzja
