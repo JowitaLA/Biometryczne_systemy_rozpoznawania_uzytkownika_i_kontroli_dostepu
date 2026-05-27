@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://gstatic.com">
     <link href="https://googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" />
+    <link rel="icon" type="image/x-icon" href="logo.png">
 
     <style>
         #result {
@@ -29,33 +30,74 @@
             border-radius: 15px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
+
+        .card-footer{
+            background: rgba(15, 39, 62, 0.90) !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: background 0.3s ease, box-shadow 0.3s ease !important;
+        }
+
+        .card-footer:hover {
+            background: rgba(15, 39, 62, 0.95) !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .img-fluid:hover {
+            opacity: 1 !important;
+            transform: scale(1.01) !important;
+            transition: transform 0.5s ease, opacity 0.5s ease !important;
+        }
+
+        .img-fluid {
+            opacity: 0.9 !important;
+            border-radius: 13px !important;
+            transition: transform 0.5s ease, opacity 0.5s ease !important;
+        }
+
+        .text-muted {
+            color: #cbd5e1 !important;
+        }
     </style>
 </head>
 <body>
-
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
             <div class="card p-5 mt-2 text-light">
                 <h2 class="text-center mb-1">Predykcja przychodu filmu</h2>
-                <p class="text-center text-muted mb-4" style="color: #cbd5e1 !important;">Sprawdź jaki będzie przewidywany przychód filmu.</p>
+                <p class="text-center text-muted">Sprawdź jaki będzie przewidywany przychód filmu.</p>
                 
+                <button type="button " class="btn btn-secondary" onclick="random()">
+                    Użyj przykładowych danych
+                </button>
+                <hr>
                 <form id="predictionForm" onsubmit="event.preventDefault(); predict();">
-                    <div class="mb-3">
-                        <label for="budget" class="form-label">Budżet ($)</label>
+                    <div class="mb-3 ">
+                        <label for="budget" class="form-label d-flex justify-content-between">
+                            <span>Budżet</span>    
+                            <span class="text-info small font-italic">(0 – 380 000 000 USD)</span></label>
                         <!-- type="text" pozwala na wstrzykiwanie spacji jako separatorów wizualnych -->
                         <input type="text" class="form-control" id="budget" placeholder="np. 200 000 000" required>
                     </div>
                     <div class="mb-3">
-                        <label for="popularity" class="form-label">Popularność</label>
+                        <label for="popularity" class="form-label d-flex justify-content-between">
+                            <span>Popularność</span>
+                            <span class="text-info small font-italic">(0 – 1000)</span>
+                        </label>
                         <input type="text" class="form-control" id="popularity" placeholder="np. 123.456789" required>
                     </div>
                     <div class="mb-3">
-                        <label for="vote_average" class="form-label">Ocena (0 - 10)</label>
+                        <label for="vote_average" class="form-label d-flex justify-content-between">
+                            <span>Ocena (0 - 10)</span>
+                            <span class="text-info small font-italic">(0 – 10)</span>
+                        </label>
                         <input type="number" min="0" max="10" step="0.01" class="form-control" id="vote_average" placeholder="np. 9.81" required>
                     </div>
                     <div class="mb-3">
-                        <label for="vote_count" class="form-label">Liczba głosów</label>
+                        <label for="vote_count" class="form-label d-flex justify-content-between">
+                            <span>Liczba głosów</span>
+                            <span class="text-info small font-italic">(0 – 13 800)</span>
+                        </label>
                         <input type="text" class="form-control" id="vote_count" placeholder="np. 1 600" required>
                     </div>
                     <div class="text-center mt-4">
@@ -64,6 +106,62 @@
                 </form>
                 
                 <div id="result" class="text-info"></div>
+            </div>
+        </div>
+        <div class="col-md-4 d-none d-md-block">
+            <div class="card p-4 mt-2 text-light">
+                <p class="text-center" id="modelInfo"></p>
+                <hr>
+                <p class="text-light small text-center">
+                    Model najlepiej działa dla danych z zakresu podanego w nawiasach przy każdym polu. Wprowadzenie wartości spoza tych zakresów może skutkować mniej dokładnymi predykcjami lub błędami.
+                </p> 
+                <p class="text-center mt-2"> Baza danych: <a href="https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata" class="text-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" target="_blank">TMDB 5000 Movie Dataset</a></p>
+            </div>
+            <div class="text-center p-2 card mt-2">           
+                <img src="porownanie_regresji.png" alt="Porównanie regresji modeli" class="img-fluid" style="cursor: pointer;" onclick="openImage(this.src)">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center rounded card-footer mt-4" style="opacity:1 !important;">
+    <div class="row">
+        <div class="col my-4">
+        <small>
+            <strong class="text-muted">Przewidywanie przychodów filmów metodami regresji</strong>
+            <p class="text-white">
+            © <span id="year"></span> Wszelkie prawa zastrzeżone
+            </p>
+        </small>
+        </div>
+
+        <div class="col-2">
+             <img src="logo.png" alt="Logo" class="img-fluid" style="max-width: 80px;">
+        </div>
+            
+
+        <div class="col mx-auto my-2">
+        <small class="text-muted d-block lh-sm">
+            <strong class="text-white">Jowita Kruk</strong><br />
+            Numer albumu: 339351<br />
+            Rok: 2025/2026 · semestr letni<br />
+            Biometryczne systemy rozpoznawania użytkownika i kontroli dostępu · Informatyka II stopnia<br />
+            <span class="text-info">Uniwersytet Śląski w Katowicach</span>
+        </small>
+        </div>
+    </div>
+</div>
+
+<!-- Powiększenie obrazu -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Porównanie regresji modeli</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modalImage" src="" class="img-fluid">
             </div>
         </div>
     </div>
@@ -117,9 +215,9 @@ function setupValidation() {
     // 3. Logika dla Popularności (zamiana przecinka na kropkę, brak spacji)
     popularity.addEventListener("input", (e) => {
         let value = e.target.value;
-        value = value.replace(",", ".");
-        value = value.replace(/[^0-9.]/g, "");
-        
+        value = value.replace(/[^0-9,.]/g, "");
+        value = value.replace(/,/g, ".");
+
         const parts = value.split(".");
         if (parts.length > 2) {
             value = parts[0] + "." + parts.slice(1).join("");
@@ -128,7 +226,6 @@ function setupValidation() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", setupValidation);
 
 async function predict() {
     const resultDiv = document.getElementById("result");
@@ -137,11 +234,13 @@ async function predict() {
     // Pobranie wartości tekstowych i oczyszczenie ich ze spacji przed konwersją na czyste liczby
     const rawBudget = document.getElementById("budget").value.replace(/\s+/g, "");
     const rawVoteCount = document.getElementById("vote_count").value.replace(/\s+/g, "");
+    const rawPopularity = document.getElementById("popularity").value.replace(/\s+/g, "").replace(/,/g, ".");
+    const rawVoteAverage = document.getElementById("vote_average").value.replace(/\s+/g, "").replace(/,/g, ".");
 
     // Konwersja na liczby (Budżet i Głosy wymuszone jako Int, reszta Float)
     const budget = parseInt(rawBudget, 10) || 0;
-    const popularity = parseFloat(document.getElementById("popularity").value) || 0;
-    const vote_average = parseFloat(document.getElementById("vote_average").value) || 0;
+    const popularity = parseFloat(rawPopularity) || 0;
+    const vote_average = parseFloat(rawVoteAverage) || 0;
     const vote_count = parseInt(rawVoteCount, 10) || 0;
 
     try {
@@ -160,25 +259,101 @@ async function predict() {
             })
         });
 
-        if (!response.ok) throw new Error("Błąd serwera");
+        if (!response.ok) {
+            const text = await response.text();
+            console.error("Błąd backendu:", text);
+            throw new Error("Błąd serwera: " + text);
+        }
 
         const data = await response.json();
         
         const formattedPrediction = new Intl.NumberFormat('pl-PL', { 
             style: 'currency', 
-            currency: '$',
+            currency: 'USD',
             maximumFractionDigits: 0 
         }).format(data.prediction);
 
-        resultDiv.className = "text-success font-weight-bold";
-        resultDiv.innerText = "Przewidywany przychód: " + formattedPrediction;
+        if (data.prediction < 0) {
+            if (popularity > 1000) {
+                resultDiv.innerText = "Zbyt duża popularność. Podaj realistyczną wartość.";
+            } else if (budget < 0) {
+                resultDiv.innerText = "Budżet za mały lub niepoprawny.";
+            } else if (vote_average < 0 || vote_average > 10) {
+                resultDiv.innerText = "Ocena musi być w zakresie 0-10.";
+            } else if (vote_count < 0) {
+                resultDiv.innerText = "Liczba głosów nie może być ujemna.";
+            } else {
+                resultDiv.innerText = "Niepoprawne dane wejściowe.";
+            }
 
+            resultDiv.className = "text-warning font-weight-bold";
+            return;
+        } else {
+            resultDiv.className = "text-success font-weight-bold";
+            resultDiv.innerText = "Przewidywany przychód: " + formattedPrediction;
+        }
     } catch (error) {
+        console.error("ERROR:", error);
         resultDiv.className = "text-danger font-weight-bold";
-        resultDiv.innerText = "Wystąpił błąd podczas pobierania predykcji.";
+        resultDiv.innerText = "Wystąpił błąd podczas pobierania predykcji:\n" + error.message;
     }
 }
-</script>
 
+function random() {
+    const budget = Math.floor(Math.random() * (380_000_000 + 1));
+    const popularity = (Math.random() * 876).toFixed(2);
+    const vote_average = (Math.random() * 10).toFixed(2);
+    const vote_count = Math.floor(Math.random() * (13800 + 1));
+
+    document.getElementById("budget").value = new Intl.NumberFormat("pl-PL").format(budget);
+    document.getElementById("popularity").value = popularity;
+    document.getElementById("vote_average").value = vote_average;
+    document.getElementById("vote_count").value = new Intl.NumberFormat("pl-PL").format(vote_count);
+
+    predict();
+}
+
+async function metrics() {
+    try {
+        const res = await fetch("metryki.txt");
+        const text = await res.text();
+
+        const lines = text.split("\n");
+
+        const model = lines[0].split(":")[1].trim();
+        const mae = parseFloat(lines[1].split(":")[1]);
+        const r2 = parseFloat(lines[2].split(":")[1]);
+
+        const r2percent = (r2 * 100).toFixed(1);
+        const maeMilions = Math.round(mae / 1_000_000);
+
+
+        document.getElementById("modelInfo").innerHTML = `
+            <h4>Model: ${model}</h4>
+            <div class="row mt-3">
+                <div class="col">
+                    <p class="text-muted small">Trafność: <br>${r2percent}%</p>
+                </div>
+                <div class="col">
+                    <p class="text-muted small">Średni błąd: <br>±${maeMilions} mln USD</p>
+                </div>
+            </div>
+        `;
+
+    } catch (err) {
+        console.error("Błąd wczytywania metryk:", err);
+    }
+}
+
+function openImage(src) {
+    document.getElementById("modalImage").src = src;
+    $('#imageModal').modal('show');
+}
+document.addEventListener("DOMContentLoaded", setupValidation);
+document.addEventListener("DOMContentLoaded", metrics);
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

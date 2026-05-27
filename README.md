@@ -55,3 +55,41 @@ https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata
 Należy zbudować model regresyjnego przewidującego przychód filmu. Można wykorzystać wybraną metodę regresji, np. Linear Regression z biblioteki Scikit-learn w Pythonie.
 
 ### Opis:
+Program webowy umożliwia predykcję przychodu filmu na podstawie danych wejściowych. Interfejs znajduje się w pliku `index.html` i wyświetla formularz z czterema polami:
+
+- `Budżet` - kwota w dolarach USD, wpisywana jako liczba całkowita i formatowana spacjami.
+- `Popularność` - liczba zmiennoprzecinkowa; wpisany przecinek zostanie automatycznie zamieniony na kropkę.
+- `Ocena` - średnia ocena użytkowników w skali 0–10.
+- `Liczba głosów` - całkowita liczba głosów oddanych na film.
+
+Po kliknięciu przycisku `Oblicz` formularz wysyła dane do backendu w `app.py` na trasę `/predict`. Backend przetwarza dane, używa wytrenowanego modelu i zwraca przewidywany przychód w odpowiedzi JSON.
+
+Wynik predykcji jest wyświetlany w elemencie `#result` na stronie, razem z formatowaniem walutowym w stylu polskim. W bocznym panelu `#modelInfo` wyświetlane są metryki modelu, takie jak trafność (R²) i średni błąd (MAE) w mln USD.
+
+Dodatkowy przycisk `Użyj przykładowych danych` wypełnia formularz losowymi wartościami i natychmiast wykonuje predykcję.
+---
+*Co robi `main.py`?*
+W folderze `6_Przewidywanie_przychodów_filmów_metodami_regresji` plik `main.py`:
+- wczytuje dane z zestawu TMDB (`tmdb_5000_movies.csv`) przy użyciu `kagglehub` i biblioteki `pandas`,
+- wybiera tylko kolumny `budget`, `popularity`, `vote_average`, `vote_count` oraz `revenue`,
+- usuwa wiersze z brakującymi wartościami i rekordy z zerowym budżetem lub przychodem,
+- tworzy nowe cechy `budget_log` i `popularity_log` jako logarytmowane wersje danych, aby lepiej dopasować rozkład cech,
+- przekształca zmienną docelową `revenue` za pomocą logarytmu `np.log1p`, aby model uczył się lepiej stabilizowanej wartości,
+- dzieli dane na zbiór treningowy i testowy,
+- normalizuje cechy numeryczne za pomocą `StandardScaler`,
+- trenuje cztery modele: `LinearRegression`, `RandomForestRegressor`, `Ridge` i `SVR`,
+- ocenia ich jakość miernikami `MAE` i `R2` po odwróceniu logarytmu do oryginalnej skali przychodu,
+- generuje wykresy porównujące rzeczywiste i przewidywane przychody oraz zapisuje je do pliku `porownanie_regresji.png`,
+- zapisuje wytrenowany model `LinearRegression` do `model.pkl`, skaler do `skaler.pkl` oraz metryki do pliku `metryki.txt`.
+
+*Co robi `app.py`?*
+Plik `app.py` uruchamia serwer Flask:
+- ładuje zapisany model (`model.pkl`) oraz skaler (`skaler.pkl`) przy starcie,
+- udostępnia endpoint `/predict`, który akceptuje żądanie `POST` z danymi JSON,
+- oblicza dodatkowe cechy `budget_log` i `popularity_log` z przesłanych wartości,
+- skaluje cechy przy użyciu wcześniej wyuczonego skalera,
+- wykonuje predykcję przychodu za pomocą modelu i odwraca logarytm `np.expm1`, aby zwrócić przychód w oryginalnej skali,
+- zwraca wynik jako JSON z polem `prediction`.
+
+`main.py` przygotowuje i zapisuje model, a `app.py` obsługuje zapytania z interfejsu `index.html` i zwraca gotowe przewidywania.
+

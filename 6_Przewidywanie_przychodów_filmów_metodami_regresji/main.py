@@ -120,7 +120,7 @@ svr_mae = mean_absolute_error(y_test_real, svr_pred_real)
 svr_r2 = r2_score(y_test_real, svr_pred_real)
 
 print("\n===================================")
-print("PORÓWNANIE MODELI")
+print("\nPORÓWNANIE MODELI\n")
 print("-----------------------------------")
 print(f"Linear Regression")
 print(f"MAE: {lr_mae:.2f}, R2: {lr_r2:.4f}")
@@ -133,12 +133,9 @@ print(f"MAE: {ridge_mae:.2f}, R2: {ridge_r2:.4f}")
 
 print(f"\nSupport Vector Regression")
 print(f"MAE: {svr_mae:.2f}, R2: {svr_r2:.4f}")
-print("===================================")
+print("-----------------------------------")
 
-# =================================================================
 # GENEROWANIE WSZYSTKICH 4 WYKRESÓW W JEDNYM OKNIE / PLIKU
-# =================================================================
-
 # Tworzymy siatkę 2x2 na 4 wykresy o wymiarach 14x12 cali
 fig, axes = plt.subplots(2, 2, figsize=(14, 12))
 
@@ -184,6 +181,20 @@ plt.show()
 # łatwiejsza do interpretacji oraz nie wymaga dodatkowego strojenia parametrów.
 
 # Zapisanie nauczonego modelu i skalera do plików
-joblib.dump(lr_model, 'model.pkl')
-joblib.dump(scaler, 'skaler.pkl')
-print("Model i skaler zostały zapisane na dysku!")
+try: 
+    joblib.dump(lr_model, 'model.pkl')
+    joblib.dump(scaler, 'skaler.pkl')
+    print("\nPliki z modelem (model.pkl) i skalerem (skaler.pkl) zostały zapisane na dysku!")
+except Exception as e:
+    print(f"\nWystąpił błąd podczas zapisywania modelu (model.pkl) lub skalera (skaler.pkl): {e}")
+
+# Zapisanie metryk modelu do pliku tekstowego
+try:
+    with open("metryki.txt", "w") as f:
+        f.write("Model: Linear Regression\n")
+        f.write(f"MAE: {lr_mae:.2f}\n")
+        f.write(f"R2: {lr_r2:.4f}\n")
+    print("Metryki modelu zostały zapisane do metryki.txt!")
+except Exception as e:
+    print(f"Wystąpił błąd podczas zapisywania metryk modelu do metryki.txt: {e}")
+print("\n===================================")
