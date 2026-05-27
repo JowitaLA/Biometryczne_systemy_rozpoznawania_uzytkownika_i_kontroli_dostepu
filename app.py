@@ -9,8 +9,10 @@ app = Flask(__name__)
 CORS(app)
 
 # Wczytanie modelu i skalera
-model = joblib.load("model.pkl")
-scaler = joblib.load("skaler.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+model = joblib.load(os.path.join(BASE_DIR, "model.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "skaler.pkl"))
 
 @app.route('/predict', methods=['POST'])
 def predict():
