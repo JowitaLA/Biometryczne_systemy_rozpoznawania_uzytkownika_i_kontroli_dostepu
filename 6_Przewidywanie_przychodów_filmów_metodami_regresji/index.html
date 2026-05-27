@@ -143,40 +143,6 @@ async function predict() {
     const popularity = parseFloat(document.getElementById("popularity").value) || 0;
     const vote_average = parseFloat(document.getElementById("vote_average").value) || 0;
     const vote_count = parseInt(rawVoteCount, 10) || 0;
-
-    try {
-        const response = await fetch("https://biometryczne-systemy-rozpoznawania-ssks.onrender.com/predict", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                budget: budget,
-                popularity: popularity,
-                vote_average: vote_average,
-                vote_count: vote_count,
-                budget_log: Math.log1p(budget),
-                popularity_log: Math.log1p(popularity)
-            })
-        });
-
-        if (!response.ok) throw new Error("Błąd serwera");
-
-        const data = await response.json();
-        
-        const formattedPrediction = new Intl.NumberFormat('pl-PL', { 
-            style: 'currency', 
-            currency: '$',
-            maximumFractionDigits: 0 
-        }).format(data.prediction);
-
-        resultDiv.className = "text-success font-weight-bold";
-        resultDiv.innerText = "Przewidywany przychód: " + formattedPrediction;
-
-    } catch (error) {
-        resultDiv.className = "text-danger font-weight-bold";
-        resultDiv.innerText = "Wystąpił błąd podczas pobierania predykcji.";
-    }
 }
 </script>
 
