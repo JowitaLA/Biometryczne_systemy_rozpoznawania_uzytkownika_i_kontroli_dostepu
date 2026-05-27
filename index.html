@@ -3,68 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <title>Predykcja przychodu filmu</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" />
-    
-    
+    <link rel="stylesheet" href="https://jsdelivr.net" />
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+        
     <style>
         #result {
-            margin-top: 20px;
+            margin-top: 15px;
             font-weight: bold;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+        body {
+            background-image: url("https://wallpapers.com/images/featured/film-background-fwuwqptvgv1k0jco.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: "Playfair Display", serif;
+            font-weight: bold;
+        }
+        .card {
+            background: rgba(15, 39, 62, 0.85) !important;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Predykcja przychodu filmu</h2>
-    <p>Sprawdź jaki będzie przewidywany przychód filmu.</p>
-    <div class="mb-3">
-        <label for="budget" class="form-label">Budżet</label>
-        <input type="email" class="form-control" id="budget" placeholder="200 000 000">
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card p-5 mt-2 text-light">
+                <h2 class="text-center mb-1">Predykcja przychodu filmu</h2>
+                <p class="text-center text-muted mb-4" style="color: #cbd5e1 !important;">Sprawdź jaki będzie przewidywany przychód filmu.</p>
+                
+                <form id="predictionForm" onsubmit="event.preventDefault(); predict();">
+                    <div class="mb-3">
+                        <label for="budget" class="form-label">Budżet ($)</label>
+                        <!-- type="text" pozwala na wstrzykiwanie spacji jako separatorów wizualnych -->
+                        <input type="text" class="form-control" id="budget" placeholder="np. 200 000 000" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="popularity" class="form-label">Popularność</label>
+                        <input type="text" class="form-control" id="popularity" placeholder="np. 123.456789" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vote_average" class="form-label">Ocena (0 - 10)</label>
+                        <input type="number" min="0" max="10" step="0.01" class="form-control" id="vote_average" placeholder="np. 9.81" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vote_count" class="form-label">Liczba głosów</label>
+                        <input type="text" class="form-control" id="vote_count" placeholder="np. 1 600" required>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-info btn-lg px-5">Oblicz</button>
+                    </div>
+                </form>
+                
+                <div id="result" class="text-info"></div>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="popularity" class="form-label">Popularność</label>
-        <input type="email" class="form-control" id="popularity" placeholder="123.456789">
-    </div>
-    <div class="mb-3">
-        <label for="vote_average" class="form-label">Ocena</label>
-        <input type="email" class="form-control" id="vote_average" placeholder="od 0 do 10">
-    </div>
-    <div class="mb-3">
-        <label for="vote_count" class="form-label">Liczba głosów</label>
-        <input type="email" class="form-control" id="vote_count" placeholder="1600">
-    </div>
-    <button class="btn btn-primary mt-2" onclick="predict()">Oblicz</button>
-
-    <div id="result"></div>
 </div>
 
 <script>
-async function predict() {
-    const budget = Number(document.getElementById("budget").value);
-    const popularity = Number(document.getElementById("popularity").value);
-    const vote_average = Number(document.getElementById("vote_average").value);
-    const vote_count = Number(document.getElementById("vote_count").value);
+// Funkcja pomocnicza formatująca liczbę całkowitą ze spacjami
+function formatIntegerWithSpaces(value) {
+    // Usuń wszystko, co nie jest cyfrą
+    let clean = value.replace(/\D/g, "");
+    if (!clean) return "";
+    
+    // Zamień ciąg cyfr na format z separatorami spacji
+    return new Intl.NumberFormat("pl-PL").format(parseInt(clean, 10));
+}
 
-    const response = await fetch("https://biometryczne-systemy-rozpoznawania-ssks.onrender.com/predict", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            budget: budget,
-            popularity: popularity,
-            vote_average: vote_average,
-            vote_count: vote_count,
-            budget_log: Math.log1p(budget),
-            popularity_log: Math.log1p(popularity)
-        })
+function setupValidation() {
+    const budget = document.getElementById("budget");
+    const popularity = document.getElementById("popularity");
+    const voteAverage = document.getElementById("vote_average");
+    const voteCount = document.getElementById("vote_count");
+
+    // 1. Logika dla BUDŻETU oraz LICZBY GŁOSÓW (tylko całkowite, rozdzielone spacjami)
+    [budget, voteCount].forEach(input => {
+        input.addEventListener("input", (e) => {
+            let cursorPosition = e.target.selectionStart;
+            let oldLength = e.target.value.length;
+            
+            // Formatuj wartość wejściową
+            let formatted = formatIntegerWithSpaces(e.target.value);
+            e.target.value = formatted;
+            
+            // Korekta pozycji kursora (żeby nie skakał na koniec pola przy wpisywaniu spacji)
+            let newLength = formatted.length;
+            cursorPosition = cursorPosition + (newLength - oldLength);
+            e.target.setSelectionRange(cursorPosition, cursorPosition);
+        });
     });
 
-    const data = await response.json();
+    // 2. Walidacja dla Oceny (blokada minusów/e, max 10)
+    voteAverage.addEventListener("keydown", e => {
+        if (e.key === "-" || e.key === "e" || e.key === "E" || e.key === "+") {
+            e.preventDefault();
+        }
+    });
+    voteAverage.addEventListener("input", () => {
+        if (voteAverage.value < 0) voteAverage.value = 0;
+        if (voteAverage.value > 10) voteAverage.value = 10;
+    });
 
-    document.getElementById("result").innerText =
-        "Przewidywany przychód: " + Math.round(data.prediction) + " $";
+    // 3. Logika dla Popularności (zamiana przecinka na kropkę, brak spacji)
+    popularity.addEventListener("input", (e) => {
+        let value = e.target.value;
+        value = value.replace(",", ".");
+        value = value.replace(/[^0-9.]/g, "");
+        
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
+        }
+        e.target.value = value;
+    });
+}
+
+document.addEventListener("DOMContentLoaded", setupValidation);
+
+async function predict() {
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerText = "Trwa obliczanie...";
+
+    // Pobranie wartości tekstowych i oczyszczenie ich ze spacji przed konwersją na czyste liczby
+    const rawBudget = document.getElementById("budget").value.replace(/\s+/g, "");
+    const rawVoteCount = document.getElementById("vote_count").value.replace(/\s+/g, "");
+
+    // Konwersja na liczby (Budżet i Głosy wymuszone jako Int, reszta Float)
+    const budget = parseInt(rawBudget, 10) || 0;
+    const popularity = parseFloat(document.getElementById("popularity").value) || 0;
+    const vote_average = parseFloat(document.getElementById("vote_average").value) || 0;
+    const vote_count = parseInt(rawVoteCount, 10) || 0;
+
+    try {
+        const response = await fetch("https://biometryczne-systemy-rozpoznawania-ssks.onrender.com/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                budget: budget,
+                popularity: popularity,
+                vote_average: vote_average,
+                vote_count: vote_count,
+                budget_log: Math.log1p(budget),
+                popularity_log: Math.log1p(popularity)
+            })
+        });
+
+        if (!response.ok) throw new Error("Błąd serwera");
+
+        const data = await response.json();
+        
+        const formattedPrediction = new Intl.NumberFormat('pl-PL', { 
+            style: 'currency', 
+            currency: 'USD',
+            maximumFractionDigits: 0 
+        }).format(data.prediction);
+
+        resultDiv.className = "text-success font-weight-bold";
+        resultDiv.innerText = "Przewidywany przychód: " + formattedPrediction;
+
+    } catch (error) {
+        resultDiv.className = "text-danger font-weight-bold";
+        resultDiv.innerText = "Wystąpił błąd podczas pobierania predykcji.";
+    }
 }
 </script>
 

@@ -36,54 +36,27 @@ print("-----------------------------------")
 print(df.describe())
 
 # Wybór kolumn
-df = df[['budget', 'popularity', 'genres',
-        'vote_average', 'vote_count', 'revenue']]
-
+df = df[['budget', 'popularity', 'vote_average', 'vote_count', 'revenue']]
 
 # Czyszczenie danych
 df = df.dropna()
 
 # Usunięcie rekordów z zerowym budżetem lub przychodem
 df = df[(df['budget'] > 0) & (df['revenue'] > 0)]
-
-
-# Parsowanie gatunków filmów (kolumna 'genres' jest w formacie string, który reprezentuje listę słowników)
-def parse_genres(x):
-    genres = ast.literal_eval(x)
-    return [g['name'] for g in genres]
-
-df['genres'] = df['genres'].apply(parse_genres)
-
-
-# Kodowanie gatunków filmów
-mlb = MultiLabelBinarizer()
-genres_encoded = pd.DataFrame(
-    mlb.fit_transform(df['genres']),
-    columns=mlb.classes_
-)
-
 df = df.reset_index(drop=True)
-genres_encoded = genres_encoded.reset_index(drop=True)
-
-df = pd.concat([df, genres_encoded], axis=1)
-df = df.drop(columns=['genres'])
-
 
 # Logarytmowanie kolumn 'budget' i 'popularity' dla lepszej dystrybucji danych
 df['budget_log'] = np.log1p(df['budget'])
 df['popularity_log'] = np.log1p(df['popularity'])
 
-
 # Przygotowanie danych do modelowania
 X = df.drop(columns=['revenue'])
 y = np.log1p(df['revenue'])
-
 
 # Podział danych na zbiór treningowy i testowy
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
-
 
 # Skalowanie danych numerycznych
 scaler = StandardScaler()
