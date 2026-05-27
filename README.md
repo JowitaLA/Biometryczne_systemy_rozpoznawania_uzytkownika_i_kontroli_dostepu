@@ -68,7 +68,7 @@ Wynik predykcji jest wyświetlany w elemencie `#result` na stronie, razem z form
 
 Dodatkowy przycisk `Użyj przykładowych danych` wypełnia formularz losowymi wartościami i natychmiast wykonuje predykcję.
 ---
-*Co robi `main.py`?*
+#### Co robi `main.py`?
 W folderze `6_Przewidywanie_przychodów_filmów_metodami_regresji` plik `main.py`:
 - wczytuje dane z zestawu TMDB (`tmdb_5000_movies.csv`) przy użyciu `kagglehub` i biblioteki `pandas`,
 - wybiera tylko kolumny `budget`, `popularity`, `vote_average`, `vote_count` oraz `revenue`,
@@ -82,7 +82,7 @@ W folderze `6_Przewidywanie_przychodów_filmów_metodami_regresji` plik `main.py
 - generuje wykresy porównujące rzeczywiste i przewidywane przychody oraz zapisuje je do pliku `porownanie_regresji.png`,
 - zapisuje wytrenowany model `LinearRegression` do `model.pkl`, skaler do `skaler.pkl` oraz metryki do pliku `metryki.txt`.
 
-*Co robi `app.py`?*
+#### Co robi `app.py`?*
 Plik `app.py` uruchamia serwer Flask:
 - ładuje zapisany model (`model.pkl`) oraz skaler (`skaler.pkl`) przy starcie,
 - udostępnia endpoint `/predict`, który akceptuje żądanie `POST` z danymi JSON,
