@@ -44,9 +44,14 @@ Program ręcznie oblicza regresję liniową. Program wydaje się bardziej obszer
 ### Treść zadania
 Celem zadania jest opracowanie systemu ekspertowego, który na podstawie odpowiedzi studenta ocenia jakość prowadzenia zajęć przez prowadzącego. System powinien wykorzystywać reguły typu IF warunek THEN decyzja
 
+### Opis:
+Program zgodnie z treścią zadania, posiada 10 reguł oceniania, oraz 6 możliwych ocen dla prowadzących. Na koniec ocenia trzech prowadzących, oraz wypisuje dla każdego wszystkie zalecenia, jeżeli takowe są. Trzeci prowadzący jest stworzony pod to, by użytkownik sam mógł wpisać oceny prowadzącego (można też go pominąć).
+
 ## Zadanie 6
 ### Treść zadania
 Celem projektu jest zbudowanie modelu regresyjnego przewidującego przychód filmu na podstawie wybranych cech opisujących film, tj. budżet, popularność, gatunek, ocena użytkowników, oraz liczba głosów. W projekcie należy wykrozystać rzeczywisty zbiór danych **TMB 5000 Movie Dataset** dostępny pod adresem:
 https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata
 
 Należy zbudować model regresyjnego przewidującego przychód filmu. Można wykorzystać wybraną metodę regresji, np. Linear Regression z biblioteki Scikit-learn w Pythonie.
+
+### Opis:

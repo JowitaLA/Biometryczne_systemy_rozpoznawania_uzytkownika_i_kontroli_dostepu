@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Predykcja przychodu filmu</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 350px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 8px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #0078ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎬 Predykcja przychodu filmu</h2>
+
+    <input id="budget" placeholder="Budżet">
+    <input id="popularity" placeholder="Popularność">
+    <input id="vote_average" placeholder="Ocena">
+    <input id="vote_count" placeholder="Liczba głosów">
+
+    <br>
+    <button onclick="predict()">Oblicz</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+async function predict() {
+    const budget = Number(document.getElementById("budget").value);
+    const popularity = Number(document.getElementById("popularity").value);
+    const vote_average = Number(document.getElementById("vote_average").value);
+    const vote_count = Number(document.getElementById("vote_count").value);
+
+    const response = await fetch("", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            budget: budget,
+            popularity: popularity,
+            vote_average: vote_average,
+            vote_count: vote_count,
+            budget_log: Math.log1p(budget),
+            popularity_log: Math.log1p(popularity)
+        })
+    });
+
+    const data = await response.json();
+
+    document.getElementById("result").innerText =
+        "Przewidywany przychód: " + Math.round(data.prediction) + " $";
+}
+</script>
+
+</body>
+</html>

@@ -47,32 +47,32 @@ def ocen_prowadzacego(
     else:
         ocena = "przeciętna"
 
-    # --- ZALECENIA ---
+    # ZALECENIA
     if (dostepnosc_konsultacji <= 2):
-        zalecenie = zalecenie + "Poprawić komunikację i zasady oceniania\n"
+        zalecenie = zalecenie + "\n- Poprawić komunikację i zasady oceniania"
 
-    elif (punktualnosc <= 2):
-        zalecenie = zalecenie + "Zwrócić uwagę na punktualność\n"
+    if (punktualnosc <= 2):
+        zalecenie = zalecenie + "\n- Zwrócić uwagę na punktualność"
 
-    elif (atrakcyjnosc_zajec <= 2):
-        zalecenie = zalecenie + "Zwiększyć atrakcyjność zajęć\n"
+    if (atrakcyjnosc_zajec <= 2):
+        zalecenie = zalecenie + "\n- Zwiększyć atrakcyjność zajęć"
     
-    elif (kontakt <= 2):
-        zalecenie = zalecenie + "Poprawić kontakt z studentami\n"
+    if (kontakt <= 2):
+        zalecenie = zalecenie + "\n- Poprawić kontakt z studentami"
 
-    elif (przygotowanie <= 2):
-        zalecenie =zalecenie + "Zwiększyć przygotowanie do zajęć\n"
+    if (przygotowanie <= 2):
+        zalecenie =zalecenie + "\n- Zwiększyć przygotowanie do zajęć"
 
-    elif (jasnosc_tlumaczenia <= 2):
-        zalecenie = zalecenie + "Poprawić jasność tłumaczenia\n"
+    if (jasnosc_tlumaczenia <= 2):
+        zalecenie = zalecenie + "\n- Poprawić jasność tłumaczenia"
 
-    elif (sposob_oceniania <= 2):
-        zalecenie = zalecenie + "Zrewidować sposób oceniania\n"
+    if (sposob_oceniania <= 2):
+        zalecenie = zalecenie + "\n- Zrewidować sposób oceniania"
     
     return ocena, zalecenie
 
 
-# DANE TESTOWE #
+# DANE TESTOWE 
 wynik1 = ocen_prowadzacego(
     jasnosc_tlumaczenia=5,
     przygotowanie=4,
@@ -93,12 +93,83 @@ wynik2 = ocen_prowadzacego(
     atrakcyjnosc_zajec=5
 )
 
-print("Ocena prowadzącego:", wynik1[0])
+print("Ocena pierwszego prowadzącego:", wynik1[0])
 if wynik1[1] != "":
     print("Zalecenie:", wynik1[1])
 
 print("\n---\n")
 
-print("Ocena prowadzącego:", wynik2[0])
+print("Ocena drugiego prowadzącego:", wynik2[0])
 if wynik2[1] != "":
     print("Zalecenie:", wynik2[1])
+
+print("\n---\n")
+
+# DODANIE MOŻLIWOŚCI WPROWADZENIA DANYCH PRZEZ UŻYTKOWNIKA
+print("Czy chcesz wprowadzić dane dla trzeciego prowadzącego? (tak/nie)")
+odpowiedz = input("> ")
+if odpowiedz == "tak":
+    print("Wprowadź dane dla trzeciego prowadzącego:")
+    jasnosc_tlumaczenia = 0
+    while jasnosc_tlumaczenia < 1 or jasnosc_tlumaczenia > 5:
+        try:
+            jasnosc_tlumaczenia = int(input("Jasność tłumaczenia (1-5): "))
+        except ValueError:
+            jasnosc_tlumaczenia = 0 
+        
+    przygotowanie = 0
+    while przygotowanie < 1 or przygotowanie > 5:
+        try:
+            przygotowanie = int(input("Przygotowanie (1-5): "))
+        except ValueError:
+            przygotowanie = 0
+
+    punktualnosc = 0
+    while punktualnosc < 1 or punktualnosc > 5:        
+        try:
+            punktualnosc = int(input("Punktualność (1-5): "))
+        except ValueError:
+            punktualnosc = 0
+
+    kontakt = 0
+    while kontakt < 1 or kontakt > 5:
+        try:
+            kontakt = int(input("Kontakt (1-5): "))
+        except ValueError:
+            kontakt = 0
+
+    sposob_oceniania = 0
+    while sposob_oceniania < 1 or sposob_oceniania > 5:
+        try:
+            sposob_oceniania = int(input("Sposób oceniania (1-5): "))
+        except ValueError:
+            sposob_oceniania = 0
+
+    dostepnosc_konsultacji = 0
+    while dostepnosc_konsultacji < 1 or dostepnosc_konsultacji > 5:
+        try:
+            dostepnosc_konsultacji = int(input("Dostępność konsultacji (1-5): "))
+        except ValueError:
+            dostepnosc_konsultacji = 0
+
+    atrakcyjnosc_zajec = 0
+    while atrakcyjnosc_zajec < 1 or atrakcyjnosc_zajec > 5:
+        try:
+            atrakcyjnosc_zajec = int(input("Atrakcyjność zajęć (1-5): "))
+        except ValueError:
+            atrakcyjnosc_zajec = 0
+
+    wynik3 = ocen_prowadzacego(
+        jasnosc_tlumaczenia=jasnosc_tlumaczenia,
+        przygotowanie=przygotowanie,
+        punktualnosc=punktualnosc,
+        kontakt=kontakt,
+        sposob_oceniania=sposob_oceniania,
+        dostepnosc_konsultacji=dostepnosc_konsultacji,
+        atrakcyjnosc_zajec=atrakcyjnosc_zajec
+    )
+    print("\n---\nOcena trzeciego prowadzącego:", wynik3[0])
+    if wynik3[1] != "":
+        print("Zalecenie:", wynik3[1])
+
+print("\n---\n\nKoniec programu.\n")
